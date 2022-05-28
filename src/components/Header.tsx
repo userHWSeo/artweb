@@ -14,6 +14,7 @@ const NavBar = styled.header`
   position: fixed;
   top: 0;
   z-index: 99;
+  font-family: "Jua", sans-serif;
 `;
 
 const HomeBtn = styled.span`
