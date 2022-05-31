@@ -66,7 +66,7 @@ function Login() {
             <Link to="/">로그인</Link>
           </Btn>
           <Btn>
-            <Link to="/sign-up">회원가입</Link>
+            <Link to="/account">회원가입</Link>
           </Btn>
         </BtnBox>
         {/*로그인 시 에러가 발생하면 경고창을 띄울 예정*/}
