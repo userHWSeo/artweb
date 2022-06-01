@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
-const Backgrond = styled.div`
+const Background = styled.div`
+  display: flex;
+  justify-content: center;
   height: 100vh;
   background-color: #4e4e4e;
 `;
@@ -68,25 +70,26 @@ function Account() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
 
-  const onEmailHandler = (event: any) => {
+  const onEmailHandler = (event: React.FormEvent<HTMLInputElement>) => {
     setEmail(event.currentTarget.value);
   };
 
-  const onPasswordHandler = (event: any) => {
+  const onPasswordHandler = (event: React.FormEvent<HTMLInputElement>) => {
     setPassword(event.currentTarget.value);
-    console.log(password);
   };
 
-  const onConfirmPasswordHandler = (event: any) => {
+  const onConfirmPasswordHandler = (
+    event: React.FormEvent<HTMLInputElement>
+  ) => {
     setConfirmPassword(event.currentTarget.value);
   };
 
-  const onNameHandler = (event: any) => {
+  const onNameHandler = (event: React.FormEvent<HTMLInputElement>) => {
     setName(event.currentTarget.value);
   };
 
   return (
-    <Backgrond>
+    <Background>
       <LoginForm>
         <LoginTitle>회원가입</LoginTitle>
         <Input
@@ -132,7 +135,7 @@ function Account() {
           <PasswordAlert>비밀번호와 비밀번호 확인이 다릅니다.</PasswordAlert>
         ) : null}
       </LoginForm>
-    </Backgrond>
+    </Background>
   );
 }
 

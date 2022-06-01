@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-const Backgrond = styled.div`
+const Background = styled.div`
+  display: flex;
+  justify-content: center;
   height: 100vh;
   background-color: #4e4e4e;
 `;
@@ -12,7 +14,6 @@ const LoginForm = styled.form`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding-top: 15rem;
 `;
 
 const LoginTitle = styled.div`
@@ -54,12 +55,32 @@ const Btn = styled.button`
 `;
 
 function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const onEmailHandler = (event: React.FormEvent<HTMLInputElement>) => {
+    setEmail(event.currentTarget.value);
+    console.log(event.currentTarget.value);
+  };
+  const onPasswordHandler = (event: React.FormEvent<HTMLInputElement>) => {
+    setPassword(event.currentTarget.value);
+  };
   return (
-    <Backgrond>
+    <Background>
       <LoginForm>
         <LoginTitle>로그인</LoginTitle>
-        <Input placeholder="이메일" type="email"></Input>
-        <Input placeholder="비밀번호" type="password"></Input>
+        <Input
+          placeholder="이메일"
+          type="email"
+          value={email}
+          onChange={onEmailHandler}
+        ></Input>
+        <Input
+          placeholder="비밀번호"
+          type="password"
+          value={password}
+          onChange={onPasswordHandler}
+        ></Input>
         <BtnBox>
           {/*DB의 로그인 정보와 같으면 홈으로 이동 그렇지 않으면 에러 렌더링*/}
           <Btn>
@@ -71,7 +92,7 @@ function Login() {
         </BtnBox>
         {/*로그인 시 에러가 발생하면 경고창을 띄울 예정*/}
       </LoginForm>
-    </Backgrond>
+    </Background>
   );
 }
 
