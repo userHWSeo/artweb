@@ -7,7 +7,6 @@ const Section = styled.section`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #4e4e4e;
   color: white;
   font-family: "Jua", sans-serif;
 `;
