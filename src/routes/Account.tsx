@@ -58,10 +58,10 @@ const Btn = styled.button`
   }
 `;
 
-const PasswordAlert = styled.div`
-  margin-top: 4rem;
-  color: #f3ff83fd;
-  font-size: 1.2rem;
+const AlertText = styled.p`
+  color: #ff2f2f;
+  font-size: 0.9rem;
+  margin: 0.4rem 0;
 `;
 
 const UploadText = styled.div`
@@ -93,10 +93,11 @@ const UploadImgInput = styled.input`
 const PreviewImg = styled.img`
   width: 8rem;
   height: 8rem;
+  border-radius: 1rem;
 `;
 
 function Account() {
-  /*useRef를 input에 사용 시 MutableRefObject를 사용*/
+  /*useRef를 input에 사용시 Type은 MutableRefObject를 사용*/
   const fileInputRef = useRef() as React.MutableRefObject<HTMLInputElement>;
   const {
     handleSubmit,
@@ -104,6 +105,10 @@ function Account() {
     watch,
     formState: { errors },
   } = useForm();
+
+  // useRef로 password 변수 생성 후 watch를 사용하여 password의 값을 넣어줌
+  const password = useRef();
+  password.current = watch("password");
 
   // ImageRendering useState
   const [image, setImage] = useState<File | null>();
@@ -135,7 +140,7 @@ function Account() {
     }
   };
 
-  const submitForm = (data: any) => {
+  const submitForm = (data: object) => {
     console.log(data);
   };
 
@@ -150,14 +155,13 @@ function Account() {
             pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
           })}
         />
-        {errors.email &&
-          errors.email.type === "required" &&
-          "이메일은 필수 항목입니다."}
-        {errors.email &&
-          errors.email.type === "pattern" &&
-          "올바른 이메일을 작성해주세요."}
+        {errors.email && errors.email.type === "required" && (
+          <AlertText>이메일은 필수 항목입니다.</AlertText>
+        )}
+        {errors.email && errors.email.type === "pattern" && (
+          <AlertText>올바른 이메일을 작성해주세요.</AlertText>
+        )}
         <Input
-          className="password"
           placeholder="비밀번호"
           type="password"
           {...register("password", {
@@ -166,16 +170,38 @@ function Account() {
             minLength: 8,
           })}
         />
+        {errors.password &&
+          (errors.password.type === "maxLength" ||
+            errors.password.type === "minLength") && (
+            <AlertText>비밀번호는 최소 8 ~ 최대 16자입니다.</AlertText>
+          )}
+        {errors.password && errors.password.type === "required" && (
+          <AlertText>비밀번호는 필수 항목입니다.</AlertText>
+        )}
         <Input
-          className="confirmPassword"
           placeholder="비밀번호 확인"
           type="password"
           {...register("confirmPassword", {
-            // required: true,
+            required: true,
             maxLength: 15,
             minLength: 8,
+            // validate로 password 값을
+            validate: (value) => value === password.current,
           })}
         />
+        {errors.confirmPassword &&
+          (errors.confirmPassword.type === "maxLength" ||
+            errors.confirmPassword.type === "minLength") && (
+            <AlertText>비밀번호는 최소 8 ~ 최대 16자입니다.</AlertText>
+          )}
+        {errors.confirmPassword &&
+          errors.confirmPassword.type === "required" && (
+            <AlertText>비밀번호는 필수 항목입니다.</AlertText>
+          )}
+        {errors.confirmPassword &&
+          errors.confirmPassword.type === "validate" && (
+            <AlertText>비밀번호가 다릅니다.</AlertText>
+          )}
         <Input
           placeholder="이름"
           type="text"
@@ -185,9 +211,18 @@ function Account() {
             maxLength: 5,
           })}
         />
+        {errors.name &&
+          (errors.name.type === "maxLength" ||
+            errors.name.type === "minLength") && (
+            <AlertText>이름은 최소 2 ~ 최대 5자입니다.</AlertText>
+          )}
+        {errors.name && errors.name.type === "required" && (
+          <AlertText>이름은 필수 항목입니다.</AlertText>
+        )}
         <UploadText>프로필 사진 업로드</UploadText>
         <ReUploadText>재업로드를 원하시면 한번 더 클릭하세요.</ReUploadText>
         {preview ? (
+          // 이미지를 변경 하고 싶을 때 다시 클릭하면 null 값으로 변경
           <PreviewImg src={preview} onClick={() => setImage(null)} />
         ) : (
           <UploadImgBtn onClick={onFileHandler}>파일 업로드</UploadImgBtn>

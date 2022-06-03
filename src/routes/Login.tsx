@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { useForm } from "react-hook-form";
 
 const Background = styled.div`
   display: flex;
@@ -53,38 +54,48 @@ const Btn = styled.button`
   }
 `;
 
-function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+const AlertText = styled.p`
+  color: #ff2f2f;
+  font-size: 0.9rem;
+  margin: 0.4rem 0;
+`;
 
-  const onEmailHandler = (event: React.FormEvent<HTMLInputElement>) => {
-    setEmail(event.currentTarget.value);
-    console.log(event.currentTarget.value);
-  };
-  const onPasswordHandler = (event: React.FormEvent<HTMLInputElement>) => {
-    setPassword(event.currentTarget.value);
+function Login() {
+  const {
+    handleSubmit,
+    register,
+    watch,
+    formState: { errors },
+  } = useForm();
+  const submitForm = (data: object) => {
+    console.log(data);
   };
   return (
     <Background>
-      <LoginForm>
+      <LoginForm onSubmit={handleSubmit(submitForm)}>
         <LoginTitle>로그인</LoginTitle>
         <Input
           placeholder="이메일"
-          type="email"
-          value={email}
-          onChange={onEmailHandler}
-        ></Input>
+          {...register("email", {
+            required: true,
+            pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+          })}
+        />
         <Input
           placeholder="비밀번호"
           type="password"
-          value={password}
-          onChange={onPasswordHandler}
-        ></Input>
+          {...register("password", {
+            required: true,
+          })}
+        />
+        {(errors.password || errors.email) && (
+          <AlertText>
+            이메일 혹은 비밀번호를 확인해주세요<div className=""></div>
+          </AlertText>
+        )}
         <BtnBox>
           {/*DB의 로그인 정보와 같으면 홈으로 이동 그렇지 않으면 에러 렌더링*/}
-          <Btn>
-            <Link to="/">로그인</Link>
-          </Btn>
+          <Btn>로그인</Btn>
           <Btn>
             <Link to="/account">회원가입</Link>
           </Btn>
